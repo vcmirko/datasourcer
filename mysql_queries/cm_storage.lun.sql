@@ -1,0 +1,26 @@
+SELECT
+    lun.objId AS id,
+    SUBSTRING_INDEX(lun.path,
+    '/',
+    -1) AS name,
+    lun.multiProtocolType as os_type,
+    lun.prefixSize as prefix_size,
+    IF(ISNULL(lun.size),
+    0,
+    lun.size/1024/1024) AS size_mb,
+    IF(ISNULL(lun.isSpaceReservationEnabled ),
+    false,
+    lun.isSpaceReservationEnabled) AS space_reserved,
+    lun.qtreeId AS qtree_id,
+    lun.volumeId AS volume_id,
+    lun.vserverId AS vserver_id,
+    SUBSTRING(lun.path,
+    6) AS full_path,
+    lun.isOnline AS is_online,
+    lun.isSpaceAllocEnabled AS space_alloc_enabled,
+    lun.serialNumber as serial_number,
+    LOWER(lun.alignment) as alignment,
+    lun.comment as comment,
+    lun.qosPolicyGroupId AS qos_policy_group_id    
+FROM
+    netapp_model_view.lun lun 

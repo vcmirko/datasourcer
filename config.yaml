@@ -1,0 +1,15 @@
+datasourcer:
+  logging:
+    file: datasourcer.log
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    dateformat: '%Y-%m-%d %H:%M:%S'
+    file_level: DEBUG
+    console_level: INFO
+  import:
+    relative_path: ./import
+  mysql:
+    host: x.x.x.x
+    port: 3306
+    user: root
+    password: ***********
+    database: database

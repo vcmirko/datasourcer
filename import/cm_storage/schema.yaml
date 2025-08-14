@@ -1,0 +1,516 @@
+disk: 
+- {name: name, nullable: false}
+- {name: uid, nullable: false}
+- {name: type, comment: 'possible values are ata,bsas,eata,fcal,lun,msata,sas,sata,scsi,ssd,xata,xsas,fsas,unknown'}
+- {name: rpm, type: int}
+- {name: home_node, type: int, foreign_key: node, constraint_actions: delete_set_null}
+- {name: owner_node, type: int, foreign_key: node, constraint_actions: delete_set_null}
+- {name: model}
+- {name: serial_number}
+- {name: size_mb, type: bigint}
+- {name: shelf}
+- {name: shelf_bay}
+- {name: pool}
+- {name: vendor}
+- {name: raid_position, comment: 'possible values are copy,data,dparity,orphan,parity,pending,present,spare,tparity'}
+- {name: container_type, comment: 'possible values are aggregate,broken,labelmaint,maintenance,spare,unassigned,volume,unknown,foreign,unsupported'}
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+quota: 
+- {name: cluster_address, nullable: false, unique: true}
+- {name: cluster_name, length: 20}
+- {name: vserver_name, length: 50, nullable: false, unique: true}
+- {name: volume_name, nullable: false, unique: true}
+- {name: name, length: 50, nullable: false, unique: true}
+- {name: path, length: 1024}
+- {name: disk_limit_mb, type: int}
+- {name: disk_used_mb, type: int}
+- {name: volume_used_pct, type: int}
+- {name: used_pct, type: int}
+- {name: timestamp, type: timestamp, default: 'current_timestamp', unique: true}
+quota_extend: 
+- {name: cluster_address}
+- {name: cluster_name}
+- {name: vserver_name}
+- {name: volume_name}
+- {name: name}
+- {name: path}
+- {name: disk_limit_mb, type: int}
+- { name: disk_used_mb, type: int}
+- {name: used_pct, type: int}
+- {name: volume_used_pct, type: int}
+- {name: new_disk_limit_mb, type: int}
+- {name: extensions_last_2_days, type: int}
+- {name: extensions_last_5_days, type: int}
+- {name: extensions, length: 10}
+- {name: volume_capacity, length: 10}
+cifs_session: 
+- {name: cluster_name, length: 20, nullable: false}
+- {name: vserver_name, length: 50, nullable: false}
+- {name: windows_user, nullable: false}
+- {name: user_type, length: 20, nullable: false}
+- {name: address, length: 20, nullable: false}
+- {name: protocol_version, length: 20, nullable: false}
+- {name: timestamp, type: timestamp, default: 'current_timestamp'}
+vscan_connection: 
+- {name: cluster_name, length: 20, nullable: false}
+- {name: vserver_name, length: 50, nullable: false}
+- {name: server_status, length: 50, nullable: false}
+- {name: server, nullable: false}
+cluster_image: 
+- {name: cluster_name, length: 20, nullable: false}
+- {name: version, length: 50, nullable: false}
+- {name: current_release, length: 50, nullable: false}
+cluster_extended: 
+- {name: cluster_name, nullable: false}
+- {name: current_release, length: 50, nullable: false}
+aggregate: 
+- {name: node, nullable: false, foreign_key: node, constraint_actions: delete_cascade}
+- {name: name, nullable: false, case_sensitive: true}
+- {name: size_mb, type: bigint, nullable: false}
+- {name: used_size_mb, type: bigint, nullable: false}
+- {name: available_size_mb, type: bigint, nullable: false}
+- {name: raid_type, comment: 'possible values are raid_dp,raid4,raid0,raid_tec'}
+- {name: raid_status, length: 128, nullable: false}
+- {name: block_type, nullable: false, comment: 'possible values are 32-bit,64-bit'}
+- {name: state, comment: 'possible values are offline,online,restricted,creating,destroying,failed,frozen,inconsistent,iron_restricted,mounting,partial,quiesced,quiescing,reverted,unknown,unmounted,unmounting'}
+- {name: number_of_disks, type: int, nullable: false}
+- {name: volume_count, type: int, nullable: false}
+- {name: is_hybrid, type: bool}
+- {name: hybrid_enabled, type: bool}
+- {name: hybrid_cache_size_mb, type: bigint}
+- {name: snapshot_total_size_mb, type: bigint}
+- {name: snapshot_used_size_mb, type: bigint}
+- {name: has_local_root, type: bool}
+- {name: has_partner_root, type: bool}
+- {name: daily_growth_rate_mb, type: bigint}
+- {name: days_until_full, type: bigint}
+- {name: snaplock_type, comment: 'possible values are non-snaplock,compliance,enterprise'}
+- {name: is_snaplock, type: bool}
+- {name: type, comment: 'possible values are ssd,hdd,vmdisk,lun,hybrid'}
+- {name: is_composite, type: bool}
+aggregate_object_store_mapping: 
+- {name: object_store, nullable: false, foreign_key: object_store, constraint_actions: delete_cascade}
+- {name: aggregate, nullable: false, foreign_key: aggregate, constraint_actions: delete_cascade}
+annotation: 
+- {name: name, nullable: false}
+- {name: value, nullable: false}
+broadcast_domain: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: ipspace, nullable: false, foreign_key: ipspace, constraint_actions: delete_cascade}
+- {name: mtu, type: int}
+cifs_share: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: path}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: comment}
+- {name: share_properties}
+cifs_share_acl: 
+- {name: cifs_share, nullable: false, foreign_key: cifs_share, constraint_actions: delete_cascade}
+- {name: user_or_group, nullable: false}
+- {name: access_level, nullable: false, comment: 'possible values are no_access,read,change,full_control'}
+cluster: 
+- {name: admin_vserver, type: int, foreign_key: vserver, constraint_actions: delete_set_null}
+- {name: name, nullable: false}
+- {name: location}
+- {name: primary_address, length: 64, nullable: false, unique: true}
+- {name: uuid, length: 64}
+- {name: serial_number}
+- {name: version}
+- {name: is_metrocluster, type: bool}
+- {name: mt_configuration_state, comment: 'possible values are unknown,not_reachable,not_configured,configuration_error,partially_configured,configured'}
+- {name: mt_mode, comment: 'possible values are unknown,not_reachable,not_configured,normal,switchover,waiting_for_switchback,partial_switchover,partial_switchback'}
+cluster_annotation: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: annotation, nullable: false, foreign_key: annotation, constraint_actions: delete_cascade}
+cluster_license: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: license, length: 100, nullable: false}
+cluster_peer: 
+- {name: primary_cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: peer_cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: cluster_uuid, length: 64}
+- {name: peer_addresses, length: 1024}
+- {name: availability, comment: 'possible values are unavailable,available,partial,pending'}
+- {name: active_addresses, length: 1024}
+- {name: serial_number}
+- {name: remote_cluster_nodes, length: 1024}
+- {name: is_cluster_healthy, type: bool}
+- {name: unreachable_local_nodes, length: 1024}
+- {name: address_family, comment: 'possible values are ipv4,ipv6'}
+- {name: auth_status_admin, comment: possible values are use-authentication}
+- {name: auth_status_operational, comment: 'possible values are ok,absent,pending,expired,revoked,declined,refused,ok_and_offer,absent_but_offer,revoked_but_offer,intent_mismatch,key_mismatch,incapable'}
+- {name: ipspace, type: int, foreign_key: ipspace, constraint_actions: delete_set_null}
+disk_aggregate: 
+- {name: disk, nullable: false, foreign_key: disk, constraint_actions: delete_cascade}
+- {name: aggregate, nullable: false, foreign_key: aggregate, constraint_actions: delete_cascade}
+efficiency_policy: 
+- {name: name, nullable: false}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: schedule, type: int, foreign_key: schedule, constraint_actions: delete_set_null}
+- {name: enabled, type: bool, nullable: false}
+- {name: comment}
+- {name: duration, type: int}
+- {name: qos_policy, comment: 'possible values are background,best_effort'}
+export_policy: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+export_rule: 
+- {name: clientmatch, nullable: false}
+- {name: policy, nullable: false, foreign_key: export_policy, constraint_actions: delete_cascade}
+- {name: protocol, nullable: false}
+- {name: ro_rule}
+- {name: rule_index, type: int, nullable: false}
+- {name: rw_rule}
+- {name: super_user}
+failover_group: 
+- {name: name, nullable: false}
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: broadcast_domain, type: int, foreign_key: broadcast_domain, constraint_actions: delete_set_null}
+fcp_adapter: 
+- {name: name, nullable: false}
+- {name: world_wide_node_name}
+- {name: world_wide_port_name}
+- {name: max_speed, type: int}
+- {name: physical_protocol, comment: 'possible values are fibre_channel,ethernet'}
+- {name: media_type, comment: 'possible values are auto,ptp,loop'}
+- {name: switch_port}
+- {name: status}
+- {name: node, nullable: false, foreign_key: node, constraint_actions: delete_cascade}
+igroup: 
+- {name: initiators, length: 1024}
+- {name: name, nullable: false, case_sensitive: true}
+- {name: os_type, comment: 'possible values are solaris,windows,hpux,xen,aix,linux,netware,vmware,openvms,hyper_v,default'}
+- {name: portset, type: int, foreign_key: portset, constraint_actions: delete_set_null}
+- {name: protocol, comment: 'possible values are fcp,iscsi,mixed'}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+ipspace: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+logical_interface: 
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: name, nullable: false, case_sensitive: true}
+- {name: role, nullable: false, comment: 'possible values are cluster,data,node-mgmt,intercluster,cluster-mgmt'}
+- {name: home_port, type: int, foreign_key: port, constraint_actions: delete_set_null}
+- {name: current_port, type: int, foreign_key: port, constraint_actions: delete_set_null}
+- {name: status, comment: 'possible values are up,down,unknown'}
+- {name: address, length: 64}
+- {name: netmask, length: 64}
+- {name: protocols}
+- {name: failover_group}
+- {name: failover_policy, comment: 'possible values are nextavail,priority,disabled,system-defined,local-only,sfo-partner-only,broadcast-domain-wide'}
+- {name: fcp_adapter, type: int, foreign_key: fcp_adapter, constraint_actions: delete_set_null}
+- {name: netmask_length, type: int}
+- {name: is_dns_update_enabled, type: bool}
+- {name: listen_for_dns_query, type: bool}
+lun: 
+- {name: name, nullable: false}
+- {name: os_type, comment: 'possible values are solaris,windows,hpux,xen,aix,linux,netware,vmware,openvms,hyper_v,image,solaris_efi,windows_2008,windows_gpt'}
+- {name: prefix_size, type: bigint}
+- {name: size_mb, type: bigint, nullable: false}
+- {name: space_reserved, type: bool, nullable: false}
+- {name: qtree, type: int, foreign_key: qtree, constraint_actions: delete_set_null}
+- {name: volume, nullable: false, foreign_key: volume, constraint_actions: delete_cascade}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: full_path, nullable: false, case_sensitive: true}
+- {name: is_online, type: bool, nullable: false}
+- {name: space_alloc_enabled, type: bool}
+- {name: serial_number}
+- {name: alignment, comment: 'possible values are aligned,misaligned,probably_misaligned,indeterminate'}
+- {name: comment}
+- {name: qos_policy_group, type: int, foreign_key: qos_policy_group, constraint_actions: delete_set_null}
+lunmap: 
+- {name: lun, nullable: false, foreign_key: lun, constraint_actions: delete_cascade}
+- {name: igroup, nullable: false, foreign_key: igroup, constraint_actions: delete_cascade}
+- { name: lun_map_value, type: int}
+node: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: ha_partner, type: int, foreign_key: node, constraint_actions: delete_set_null}
+- {name: node_vserver, type: int, foreign_key: vserver, constraint_actions: delete_set_null}
+- {name: name, nullable: false}
+- {name: primary_address, length: 64}
+- {name: model}
+- {name: serial_number}
+- {name: system_id, length: 64}
+- {name: os_version}
+- {name: owner}
+- {name: location}
+- {name: product_type, comment: 'possible values are v-series,gateway'}
+- {name: failover_enabled, type: bool}
+- {name: takeover_possible, type: bool}
+- {name: failover_state}
+- { name: memory_size_mb, type: bigint}
+- {name: flash_device_count, type: int}
+- {name: is_flash_optimized, type: bool}
+object_store: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: name, nullable: false}
+- {name: container_name, nullable: false}
+- {name: provider_type, nullable: false}
+- {name: server, nullable: false}
+- {name: is_ssl_enabled, type: bool, nullable: false}
+- {name: ipspace, nullable: false, foreign_key: ipspace, constraint_actions: delete_cascade}
+port: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: node, nullable: false, foreign_key: node, constraint_actions: delete_cascade}
+- {name: type, comment: 'possible values are physical,if_group,vlan,unknown'}
+- { name: role, comment: 'possible values are data,cluster,node-mgmt,intercluster,undef,cluster-mgmt,unknown'}
+- {name: operational_status, comment: 'possible values are up,down,unknown'}
+- { name: mtu, type: int}
+- {name: ifgrp_port, type: int, foreign_key: port, constraint_actions: delete_set_null}
+- {name: operational_speed, comment: 'possible values are auto,megabit_10,megabit_100,gigabit_1,gigabit_10'}
+- {name: vlan_id, type: int}
+- {name: vlan_port, type: int, foreign_key: port, constraint_actions: delete_set_null}
+- {name: broadcast_domain, type: int, foreign_key: broadcast_domain, constraint_actions: delete_set_null}
+- {name: health_status, comment: 'possible values are healthy,degraded'}
+- {name: ignore_health_status, type: bool}
+- {name: health_degraded_reasons, comment: 'possible values are l2-reachability,link-flapping'}
+portset: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: type, nullable: false, comment: 'possible values are fcp,iscsi,mixed'}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+portset_member: 
+- {name: portset, nullable: false, foreign_key: portset, constraint_actions: delete_cascade}
+- {name: logical_interface, nullable: false, foreign_key: logical_interface, constraint_actions: delete_cascade}
+qos_policy_group: 
+- {name: name, length: 128, nullable: false, case_sensitive: true}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: class, comment: 'possible values are preset,user_defined,system_defined,null'}
+- {name: max_throughput_limit}
+- {name: min_throughput_limit}
+- {name: isadaptive, type: int}
+- {name: min_iops_allocation}
+- {name: peak_iops_allocation, comment: 'possible values are used-space,allocated-space'}
+- {name: is_shared, type: bool}
+qtree: 
+- {name: name, nullable: false, case_sensitive: true}
+- { name: oplock_mode, comment: 'possible values are enabled,disabled'}
+- {name: path, length: 512}
+- {name: security_style, comment: 'possible values are unix,ntfs,mixed'}
+- {name: volume, nullable: false, foreign_key: volume, constraint_actions: delete_cascade}
+- {name: disk_limit_mb, type: bigint}
+- { name: disk_soft_limit_mb, type: bigint}
+- {name: files_limit, type: bigint}
+- {name: soft_files_limit, type: bigint}
+- {name: threshold_mb, type: bigint}
+- { name: disk_used_mb, type: bigint}
+resource_group: 
+- {name: dfm_name, nullable: false}
+- {name: name, nullable: false}
+- {name: parent_group, type: int, foreign_key: resource_group, constraint_actions: delete_set_null}
+- {name: uuid, nullable: false, unique: true}
+resource_group_member: 
+- {name: aggregate, type: int, foreign_key: aggregate, constraint_actions: delete_set_null}
+- {name: cluster, type: int, foreign_key: cluster, constraint_actions: delete_set_null}
+- {name: group, nullable: false, foreign_key: resource_group, constraint_actions: delete_cascade}
+- {name: uuid, nullable: false, unique: true}
+- {name: volume, type: int, foreign_key: volume, constraint_actions: delete_set_null}
+- {name: vserver, type: int, foreign_key: vserver, constraint_actions: delete_set_null}
+resource_pool: 
+- {name: name, nullable: false}
+- {name: description, length: 10240}
+- {name: uuid, nullable: false, case_sensitive: true, unique: true}
+resource_pool_member: 
+- {name: resource_pool, nullable: false, foreign_key: resource_pool, constraint_actions: delete_cascade}
+- {name: aggregate, nullable: false, foreign_key: aggregate, constraint_actions: delete_cascade}
+schedule: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: description}
+- {name: type, nullable: false, comment: 'possible values are cron,interval'}
+- {name: cron_days_of_month}
+- {name: cron_days_of_week}
+- { name: cron_hours}
+- {name: cron_minutes}
+- {name: cron_months}
+- {name: interval_days, type: int}
+- {name: interval_hours, type: int}
+- {name: interval_minutes, type: int}
+- {name: interval_seconds, type: int}
+snapmirror: 
+- {name: secondary_volume, nullable: false, foreign_key: volume, constraint_actions: delete_cascade}
+- { name: tries, type: int}
+- {name: type, nullable: false, comment: 'possible values are data_protection,load_sharing,vault,transition_data_protection'}
+- {name: volume, nullable: false, foreign_key: volume, constraint_actions: delete_cascade}
+- {name: max_transfer_rate, type: bigint}
+- {name: snapmirror_policy, type: int, foreign_key: snapmirror_policy, constraint_actions: delete_set_null}
+- {name: schedule, type: int, foreign_key: schedule, constraint_actions: delete_set_null}
+- {name: state, comment: 'possible values are uninitialized,snapmirrored,broken_off'}
+- {name: relationship_identifier}
+- {name: mirror_state}
+- {name: relationship_status}
+- {name: lag_time, type: int}
+- {name: policy_type}
+- {name: relationship_type}
+- {name: vserver_snapmirror, type: int, foreign_key: snapmirror_svm, constraint_actions: delete_set_null}
+snapmirror_policy: 
+- {name: name, nullable: false, case_sensitive: true}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: comment}
+- {name: transfer_priority, comment: 'possible values are normal,low'}
+- {name: restart, comment: 'possible values are always,never,default'}
+- {name: tries}
+- {name: ignore_atime, type: bool}
+- {name: type, comment: 'possible values are vault,async-mirror,mirror-vault'}
+snapmirror_policy_rule: 
+- { name: snapmirror_label, nullable: false, case_sensitive: true}
+- {name: snapmirror_policy, nullable: false, foreign_key: snapmirror_policy, constraint_actions: delete_cascade}
+- {name: keep, type: int}
+- {name: preserve, type: bool}
+- {name: warn, type: int}
+snapmirror_svm: 
+- {name: tries, type: int}
+- {name: type, nullable: false, comment: 'possible values are data_protection,load_sharing,vault,transition_data_protection'}
+- {name: destination_vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: max_transfer_rate, type: bigint}
+- {name: snapmirror_policy, type: int, foreign_key: snapmirror_policy, constraint_actions: delete_set_null}
+- {name: schedule, type: int, foreign_key: schedule, constraint_actions: delete_set_null}
+- {name: state, comment: 'possible values are uninitialized,snapmirrored,broken_off'}
+- {name: relationship_identifier}
+- {name: source_vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+snapshot_policy: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: comment}
+- {name: enabled, type: bool, nullable: false}
+- { name: name, nullable: false, case_sensitive: true}
+snapshot_policy_schedule: 
+- {name: schedule, nullable: false, foreign_key: schedule, constraint_actions: delete_cascade}
+- {name: snapshot_count, type: int, nullable: false}
+- {name: snapshot_prefix}
+- { name: snapmirror_label}
+- {name: snapshot_policy, nullable: false, foreign_key: snapshot_policy, constraint_actions: delete_cascade}
+storage_pool: 
+- {name: name, nullable: false}
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: allocation_unit_size_mb, type: bigint, nullable: false}
+- {name: pool_usable_size_mb, type: bigint}
+- {name: pool_total_size_mb, type: bigint}
+- {name: storage_type, comment: 'possible values are ata,bsas,fcal,fsas,lun,msata,sas,sata,ssd'}
+- {name: disk_count, type: bigint, nullable: false}
+storage_pool_aggregate: 
+- {name: storage_pool, nullable: false, foreign_key: storage_pool, constraint_actions: delete_cascade}
+- {name: aggregate, nullable: false, foreign_key: aggregate, constraint_actions: delete_cascade}
+- {name: used_capacity_mb, type: bigint}
+storage_pool_available: 
+- {name: storage_pool, nullable: false, foreign_key: storage_pool, constraint_actions: delete_cascade}
+- {name: node, nullable: false, foreign_key: node, constraint_actions: delete_cascade}
+- {name: allocation_unit_count, type: bigint, nullable: false}
+- {name: available_size_mb, type: bigint, nullable: false}
+volume: 
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: aggregate, type: int, foreign_key: aggregate, constraint_actions: delete_set_null}
+- {name: parent_volume, type: int, foreign_key: volume, constraint_actions: delete_set_null}
+- {name: name, nullable: false, case_sensitive: true}
+- {name: size_mb, type: bigint, nullable: false}
+- {name: used_size_mb, type: bigint, nullable: false}
+- {name: available_size_mb, type: bigint, nullable: false}
+- {name: type, comment: 'possible values are rw,ls,dp,dc'}
+- {name: state, comment: 'possible values are online,restricted,offline'}
+- {name: junction_path, length: 512}
+- {name: space_guarantee, comment: 'possible values are none,volume,file'}
+- {name: snapshot_used_mb, type: bigint, nullable: false}
+- {name: snapshot_reserved_percent, type: int, nullable: false}
+- {name: snapshot_enabled, type: bool, nullable: false}
+- {name: style, nullable: false, comment: 'possible values are flex,trad,infinivol,constituent,striped,flexgroup'}
+- {name: max_autosize_mb, type: bigint}
+- {name: block_type, comment: 'possible values are 32-bit,64-bit'}
+- {name: security_style, comment: 'possible values are unix,ntfs,mixed,unified'}
+- {name: dedupe_enabled, type: bool}
+- {name: auto_increment_size_mb, type: bigint}
+- {name: snapshot_policy, type: int, foreign_key: snapshot_policy, constraint_actions: delete_set_null}
+- {name: export_policy, type: int, foreign_key: export_policy, constraint_actions: delete_set_null}
+- {name: autosize_enabled, type: bool}
+- {name: compression, comment: 'possible values are disabled,background,inline'}
+- {name: deduplication_space_saved_mb, type: bigint}
+- {name: compression_space_saved_mb, type: bigint}
+- {name: percent_deduplication_space_saved, type: int}
+- {name: percent_compression_space_saved, type: int}
+- {name: hybrid_cache_eligibility, comment: 'possible values are read,read_write'}
+- {name: inode_files_total, type: bigint}
+- {name: inode_files_used, type: bigint}
+- {name: auto_size_mode, comment: 'possible values are off,grow,grow_shrink'}
+- { name: sis_last_op_begin_timestamp, type: datetime}
+- {name: sis_last_op_end_timestamp, type: datetime}
+- {name: flexcache_origin_volume, type: int, foreign_key: volume, constraint_actions: delete_set_null}
+- {name: flexcache_min_reserve_mb, type: bigint}
+- {name: constituent_role, comment: 'possible values are namespace,data,ns_mirror,ols'}
+- {name: is_managed_by_service, type: bool}
+- {name: storage_class}
+- {name: snap_diff_enabled, type: bool}
+- {name: max_namespace_constituent_size_mb, type: bigint}
+- {name: max_data_constituent_size_mb, type: bigint}
+- {name: efficiency_policy, type: int, foreign_key: efficiency_policy, constraint_actions: delete_set_null}
+- {name: qos_policy_group, type: int, foreign_key: qos_policy_group, constraint_actions: delete_set_null}
+- {name: language, comment: 'possible values are c,ar,cs,da,de,en,en_us,es,fi,fr,he,hr,hu,it,ja,ja_v1,ja_jp.pck,ja_jp.932,ja_jp.pck_v2,ko,no,nl,pl,pt,ro,ru,sk,sl,sv,tr,zh,zh.gbk,zh_tw,zh_tw.big5,c.utf_8,ar.utf_8,cs.utf_8,da.utf_8,de.utf_8,en.utf_8,en_us.utf_8,es.utf_8,fi.utf_8,fr.utf_8,he.utf_8,hr.utf_8,hu.utf_8,it.utf_8,ja.utf_8,ja_v1.utf_8,ja_jp.pck.utf_8,ja_jp.932.utf_8,ja_jp.pck_v2.utf_8,ko.utf_8,no.utf_8,nl.utf_8,pl.utf_8,pt.utf_8,ro.utf_8,ru.utf_8,sk.utf_8,sl.utf_8,sv.utf_8,tr.utf_8,zh.utf_8,zh.gbk.utf_8,zh_tw.utf_8,zh_tw.big5.utf_8'}
+- {name: data_daily_growth_rate_mb, type: bigint}
+- {name: data_days_until_full, type: bigint}
+- {name: auto_delete_enabled, type: bool}
+- {name: auto_delete_commitment, comment: 'possible values are try,disrupt,destroy'}
+- {name: auto_delete_delete_order, comment: 'possible values are oldest_first,newest_first'}
+- {name: auto_delete_defer_delete, comment: 'possible values are scheduled,user_created,prefix,none'}
+- {name: auto_delete_target_free_space, type: bigint}
+- {name: auto_delete_trigger, comment: 'possible values are volume,snap_reserve,space_reserve'}
+- {name: auto_delete_prefix}
+- {name: auto_delete_destroy_list}
+- {name: snaplock_type, comment: 'possible values are non-snaplock,compliance,enterprise'}
+- {name: tiering_policy, comment: 'possible values are auto,none,backup,snapshot-only'}
+- {name: is_encrypt, type: bool}
+volume_annotation: 
+- {name: volume, nullable: false, foreign_key: volume, constraint_actions: delete_cascade}
+- {name: annotation, nullable: false, foreign_key: annotation, constraint_actions: delete_cascade}
+vserver: 
+- {name: cluster, nullable: false, foreign_key: cluster, constraint_actions: delete_cascade}
+- {name: root_volume, type: int, foreign_key: volume, constraint_actions: delete_set_null}
+- {name: name, nullable: false, case_sensitive: true}
+- {name: type, nullable: false, comment: 'possible values are admin,node,cluster,data'}
+- {name: uuid}
+- {name: name_service_switch}
+- {name: nis_domain}
+- {name: language, length: 32}
+- {name: comment, length: 1024}
+- {name: admin_state, comment: 'possible values are running,stopped,starting,stopping,deleting,initializing'}
+- {name: nfs_allowed, type: bool, nullable: false}
+- {name: cifs_allowed, type: bool, nullable: false}
+- {name: fcp_allowed, type: bool, nullable: false}
+- {name: iscsi_allowed, type: bool, nullable: false}
+- {name: dns_domain}
+- {name: dns_servers}
+- {name: snapshot_policy, type: int, foreign_key: snapshot_policy, constraint_actions: delete_set_null}
+- {name: cifs_is_up, type: bool, nullable: false}
+- {name: nfs_is_up, type: bool, nullable: false}
+- {name: fcp_is_up, type: bool, nullable: false}
+- {name: iscsi_is_up, type: bool, nullable: false}
+- {name: max_volumes, type: int}
+- {name: restricted_aggregate_count, type: int, nullable: false}
+- {name: cifs_authentication_style, comment: 'possible values are domain,workgroup'}
+- {name: cifs_domain}
+- {name: nis_enabled, type: bool}
+- {name: nis_servers}
+- {name: is_repository, type: bool}
+- {name: dns_enabled, type: bool}
+- {name: qos_policy_group, type: int, foreign_key: qos_policy_group, constraint_actions: delete_set_null}
+- {name: ipspace, type: int, foreign_key: ipspace, constraint_actions: delete_set_null}
+- {name: operational_state, comment: 'possible values are running,stopped'}
+- {name: subtype, comment: 'possible values are default,dp-destination,sync-source,sync-destination'}
+- {name: is_smb_encryption_required, type: bool}
+- {name: is_ddns_enabled, type: bool}
+- {name: is_ddns_use_secure, type: bool}
+- {name: ddns_domain_name}
+- {name: ddns_ttl, type: int}
+vserver_allowed_aggregate: 
+- {name: aggregate, nullable: false, foreign_key: aggregate, constraint_actions: delete_cascade}
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+vserver_annotation: 
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: annotation, nullable: false, foreign_key: annotation, constraint_actions: delete_cascade}
+vserver_association: 
+- {name: source_vserver, type: int, foreign_key: vserver, constraint_actions: delete_set_null}
+- {name: destination_vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: type, nullable: false, comment: 'possible values are mirror,vault'}
+- {name: uuid, nullable: false, unique: true}
+vserver_peer: 
+- {name: vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: peer_vserver, nullable: false, foreign_key: vserver, constraint_actions: delete_cascade}
+- {name: peer_state, comment: 'possible values are peered,pending,initializing,initiated,rejected,suspended,deleted'}
+- {name: applications}
+- {name: peer_vserver_local_name} 

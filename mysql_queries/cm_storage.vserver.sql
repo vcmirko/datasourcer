@@ -1,0 +1,68 @@
+SELECT
+    vserver.objId AS id,
+    vserver.clusterId AS cluster_id,
+    vserver.rootVolumeId AS root_volume_id,
+    vserver.name AS NAME,
+    vserver.typeRaw AS TYPE,
+    vserver.uuid AS UUID,
+    vserver.nameServerSwitch AS name_service_switch,
+    nis_domain.nisDomain AS nis_domain,
+    vserver.language AS LANGUAGE,
+    NULL AS COMMENT,
+    vserver.stateRaw AS admin_state,
+    IF(vserver.allowedProtocols LIKE '%nfs%',
+    1,
+    0) AS nfs_allowed,
+    IF(vserver.allowedProtocols LIKE '%cifs%',
+    1,
+    0) AS cifs_allowed,
+    IF(vserver.allowedProtocols LIKE '%fcp%',
+    1,
+    0) AS fcp_allowed,
+    IF(vserver.allowedProtocols LIKE '%iscsi%',
+    1,
+    0) AS iscsi_allowed,
+    vserver.dnsDomainNames AS dns_domain,
+    vserver.dnsServers AS dns_servers,
+    vserver.snapshotPolicyId AS snapshot_policy_id,
+    IF(vserver.cifsEnabled IS NULL,
+    0,
+    vserver.cifsEnabled) AS cifs_is_up,
+    IF(vserver.nfsEnabled IS NULL,
+    0,
+    vserver.nfsEnabled) AS nfs_is_up,
+    IF(vserver.fcpEnabled IS NULL,
+    0,
+    vserver.fcpEnabled) AS fcp_is_up,
+    IF(vserver.iscsiEnabled IS NULL,
+    0,
+    vserver.iscsiEnabled) AS iscsi_is_up,
+    IF(vserver.maximumVolumes = -1,
+    NULL,
+    vserver.maximumVolumes) AS max_volumes,
+    COUNT(vserver_to_aggregate.aggregateId) AS restricted_aggregate_count,
+    vserver.cifsAuthenticationStyleRaw AS cifs_authentication_style,
+    vserver.cifsDomain AS cifs_domain,
+    vserver.nisEnabled AS nis_enabled,
+    nis_domain.nisServers AS nis_servers,
+    vserver.isRepository AS is_repository,
+    vserver.dnsEnabled AS dns_enabled,
+    vserver.qosPolicyGroupId AS qos_policy_group_id,
+    vserver.networkIpSpaceId AS ipspace_id,
+    vserver.operationalStateRaw AS operational_state,
+    vserver.subtypeRaw AS subtype,
+    vserver.isSmbEncryptionRequired AS is_smb_encryption_required,
+    vserver.isEnabled AS is_ddns_enabled,
+    vserver.useSecure AS is_ddns_use_secure,
+    vserver.domainName AS ddns_domain_name,
+    vserver.ttl AS ddns_ttl    
+FROM
+    netapp_model_view.vserver vserver    
+LEFT JOIN
+    netapp_model_view.vserver_to_aggregate vserver_to_aggregate                                    
+        ON vserver_to_aggregate.vserverId = vserver.objid    
+LEFT JOIN
+    netapp_model_view.nis_domain nis_domain                                    
+        ON nis_domain.vserverId = vserver.objid    
+GROUP BY
+    vserver.objId

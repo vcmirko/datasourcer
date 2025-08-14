@@ -1,0 +1,30 @@
+SET NAMES utf8;
+SET SQL_MODE='';
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
+SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0;
+
+CREATE DATABASE IF NOT EXISTS `{{ schema }}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE `{{ schema }}`;
+
+{% for table in tables %}
+/* Create table `{{ table.name }}` */
+DROP TABLE IF EXISTS `{{ table.name }}`;
+
+CREATE TABLE `{{ table.name }}` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  {% for column in table.columns %}{{ column }}, 
+  {% endfor %}{% if table.unique_key %}{{ table.unique_key }},
+  {% endif %}{% for fk in table.foreign_keys %}{{ fk }}, 
+  {% endfor %}{% for k in table.indexes %}{{ k }}, 
+  {% endfor %}PRIMARY KEY (`id`)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+{% endfor %}
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET SQL_NOTES=@OLD_SQL_NOTES;
